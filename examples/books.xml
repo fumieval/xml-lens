@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<books>
+<book category="Language and library definition">
+    <title>Haskell 98 language and libraries: the Revised Report</title>
+    <author year="2003">Simon Peyton Jones</author>
+    <pages>272</pages>
+    <price>£45.00</price>
+</book>
+<book category="Textbooks">
+    <title>Learn You a Haskell for Great Good!</title>
+    <author year="2011">Miran Lipovaca</author>
+    <pages>360</pages>
+</book>
+<book category="Textbooks">
+    <title>Programming in Haskell</title>
+    <author year="2007">Graham Hutton</author>
+    <pages>200</pages>
+</book>
+<book category="Textbooks">
+    <title>Real World Haskell</title>
+    <author year="2008">Bryan O'Sullivan, Don Stewart, and John Goerzen</author>
+    <pages>700</pages>
+</book>
+<book category="TextBooks">
+    <title>The Fun of Programming</title>
+    <author year="2002">Jeremy Gibbons and Oege de Moor</author>
+    <pages>288</pages>
+</book>
+<book category="Foundations">
+    <title>Types and Programming Languages</title>
+    <author year="2002">Benjamin C. Pierce</author>
+    <pages>645</pages>
+</book>
+<book category="Joke">
+    <title>Functional Ikamusume</title>
+    <author>Team "Referential Transparent Sea Keepers"</author>
+</book>
+</books>

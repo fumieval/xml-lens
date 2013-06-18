@@ -125,7 +125,7 @@ el n f s
     | otherwise = pure s
 
 attributeSatisfies :: Name -> (Text -> Bool) -> Traversal' Element Element
-attributeSatisfies n p = plate . filtered (maybe False p . preview (attrs . ix n))
+attributeSatisfies n p = filtered (maybe False p . preview (attrs . ix n))
 
 attributeIs :: Name -> Text -> Traversal' Element Element
 attributeIs n v = attributeSatisfies n (==v)
