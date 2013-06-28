@@ -6,7 +6,7 @@ Lenses and traversals for [xml-conduit](http://hackage.haskell.org/package/xml-c
 Example
 ========
 
-    > doc <- Text.XML.readFile def "examples\\books.xml"
+    > doc <- Text.XML.readFile def "examples/books.xml"
 
     > doc ^.. root . el "books" ./ el "book" . attributeIs "category" "Textbooks" ./ el "title" . text
     ["Learn You a Haskell for Great Good!","Programming in Haskell","Real World Haskell"]
