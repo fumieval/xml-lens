@@ -16,6 +16,7 @@ module Text.XML.Lens (
     -- ** Names
     , name
     , el
+    , ell
     -- ** Attributes
     , attributeIs
     , attributeSatisfies
@@ -45,6 +46,9 @@ module Text.XML.Lens (
     -- * Lenses for 'Instruction'
     , _instructionTarget
     , _instructionData
+    -- * Reexports
+    , module Control.Lens
+    , module Text.XML
     ) where
 import Text.XML
 import Control.Lens
@@ -136,12 +140,18 @@ attribute n = attrs . at n
 -- | Traverse itself with its all children.
 entire :: Traversal' Element Element
 entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
-    com (Element n a _) ns = Element n a ns
+    com (Element n a _) = Element n a
 
 -- | Traverse elements which has the specified name.
 el :: Name -> Traversal' Element Element
 el n f s
     | elementName s == n = f s
+    | otherwise = pure s
+
+-- | Traverse elements which has the specified *local* name. 
+ell :: Text -> Traversal' Element Element
+ell n f s
+    | nameLocalName (elementName s) == n = f s
     | otherwise = pure s
 
 attributeSatisfies :: Name -> (Text -> Bool) -> Traversal' Element Element
