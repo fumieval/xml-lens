@@ -6,18 +6,20 @@ Lenses and traversals for [xml-conduit](http://hackage.haskell.org/package/xml-c
 Example
 ========
 
-    > doc <- Text.XML.readFile def "examples/books.xml"
+```haskell
+> doc <- Text.XML.readFile def "examples/books.xml"
 
-    > doc ^.. root . el "books" ./ el "book" . attributeIs "category" "Textbooks" ./ el "title" . text
-    ["Learn You a Haskell for Great Good!","Programming in Haskell","Real World Haskell"]
+> doc ^.. root . el "books" ./ el "book" . attributeIs "category" "Textbooks" ./ el "title" . text
+["Learn You a Haskell for Great Good!","Programming in Haskell","Real World Haskell"]
 
-    > lengthOf ?? doc $ root . el "books" ./ el "book"
-    7
+> lengthOf ?? doc $ root . el "books" ./ el "book"
+7
 
-    > doc ^? root . el "books" ./ attributeIs "category" "Joke" ./ el "title" . text
-    Just "Functional Ikamusume"
+> doc ^? root . el "books" ./ attributeIs "category" "Joke" ./ el "title" . text
+Just "Functional Ikamusume"
 
-    > doc & root . el "books" ./ el "book" ./ el "pages" . text <>~ " pages" & renderLBS def & BL.putStrLn
+> doc & root . el "books" ./ el "book" ./ el "pages" . text <>~ " pages" & renderLBS def & BL.putStrLn
+```
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
