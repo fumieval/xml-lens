@@ -1,4 +1,5 @@
 {-# LANGUAGE Rank2Types, FlexibleContexts #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Text.XML.Lens
@@ -12,9 +13,11 @@
 ----------------------------------------------------------------------------
 module Text.XML.Lens (
     -- * Lenses, traversals for 'Element'
-    (./)
+    Element(..)
+    , (./)
     -- ** Names
     , name
+    , localName
     , el
     , ell
     -- ** Attributes
@@ -30,25 +33,28 @@ module Text.XML.Lens (
     , entire
     , nodes
     -- * Prisms for 'Node'
+    , Node(..)
     , _Element
     , _Content
     , AsInstruction(..)
     , AsComment(..)
     -- * Lenses for 'Document'
+    , Document(..)
     , root
     , prologue
     , epilogue
     , doctype
     -- * Lenses for 'Name'
+    , Name(..)
     , _nameLocalName
     , _nameNamespace
     , _namePrefix
     -- * Lenses for 'Instruction'
+    , Instruction(..)
     , _instructionTarget
     , _instructionData
-    -- * Reexports
+    -- * Reexport
     , module Control.Lens
-    , module Text.XML
     ) where
 import Text.XML
 import Control.Lens
@@ -104,13 +110,13 @@ instance AsComment Miscellaneous where
         _ -> Nothing
 
 _nameLocalName :: Lens' Name Text
-_nameLocalName f n = fmap (\x -> n { nameLocalName = x }) $ f $ nameLocalName n
+_nameLocalName f n = f (nameLocalName n) <&> \x -> n { nameLocalName = x }
 
 _nameNamespace :: Lens' Name (Maybe Text)
-_nameNamespace f n = fmap (\x -> n { nameNamespace = x }) $ f $ nameNamespace n
+_nameNamespace f n = f (nameNamespace n) <&> \x -> n { nameNamespace = x }
 
 _namePrefix :: Lens' Name (Maybe Text)
-_namePrefix f n = fmap (\x -> n { namePrefix = x }) $ f $ namePrefix n
+_namePrefix f n = f (namePrefix n) <&> \x -> n { namePrefix = x }
 
 _Element :: Prism' Node Element
 _Element = prism' NodeElement $ \s -> case s of
@@ -123,7 +129,11 @@ _Content = prism' NodeContent $ \s -> case s of
     _ -> Nothing
 
 name :: Lens' Element Name
-name f e = fmap (\x -> e { elementName = x }) $ f $ elementName e
+name f e = f (elementName e) <&> \x -> e { elementName = x }
+
+localName :: Lens' Element Text
+localName = name . _nameLocalName
+{-# INLINE localName #-}
 
 attrs :: Lens' Element (Map Name Text)
 attrs f e = fmap (\x -> e { elementAttributes = x }) $ f $ elementAttributes e
@@ -137,7 +147,7 @@ attr n = attrs . ix n
 attribute :: Name -> IndexedLens' Name Element (Maybe Text)
 attribute n = attrs . at n
 
--- | Traverse itself with its all children.
+-- | Traverse itself with its all children.　Rewriting subnodes of each children will break a traversal law.
 entire :: Traversal' Element Element
 entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
     com (Element n a _) = Element n a
@@ -178,3 +188,4 @@ instance Plated Element where
 -- @
 (./) :: Plated a => Traversal s t a a -> Traversal a a u v -> Traversal s t u v
 l ./ m = l . plate . m
+{-# INLINE (./) #-}
