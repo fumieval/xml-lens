@@ -141,10 +141,10 @@ attrs f e = fmap (\x -> e { elementAttributes = x }) $ f $ elementAttributes e
 nodes :: Lens' Element [Node]
 nodes f e = fmap (\x -> e { elementNodes = x }) $ f $ elementNodes e
 
-attr :: Name -> IndexedTraversal' Name Element Text
+attr :: Name -> Traversal' Element Text
 attr n = attrs . ix n
 
-attribute :: Name -> IndexedLens' Name Element (Maybe Text)
+attribute :: Name -> Lens' Element (Maybe Text)
 attribute n = attrs . at n
 
 -- | Traverse itself with its all children.　Rewriting subnodes of each children will break a traversal law.
