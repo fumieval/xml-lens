@@ -159,6 +159,7 @@ named n f s
     | nameLocalName (elementName s) == n = f s
     | otherwise = pure s
 
+ell :: Text -> Traversal' Element Element
 ell = named
 
 -- | Traverse elements which has the specified name.
