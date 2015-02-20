@@ -153,7 +153,7 @@ entire :: Traversal' Element Element
 entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
     com (Element n a _) = Element n a
 
--- | Traverse elements which has the specified *local* name. 
+-- | Traverse elements which has the specified *local* name.
 named :: Text -> Traversal' Element Element
 named n f s
     | nameLocalName (elementName s) == n = f s
@@ -186,10 +186,10 @@ instance Plated Element where
     plate = nodes . traverse . _Element
 
 -- | Combine two 'Traversal's just like XPath's slash.
--- 
--- @ 
+--
+-- @
 -- l ./ m ≡ l . 'plate' . m
 -- @
-(./) :: Plated a => Traversal s t a a -> Traversal a a u v -> Traversal s t u v
-l ./ m = l . plate . m
+(./) :: (Applicative f, Plated c) => LensLike f s t c c -> Over p f c c a b -> Over p f s t a b
+(./) = (...)
 {-# INLINE (./) #-}
