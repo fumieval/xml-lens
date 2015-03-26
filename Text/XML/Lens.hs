@@ -3,13 +3,13 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Text.XML.Lens
--- Copyright   :  (C) 2013 Fumiaki Kinoshita
+-- Copyright   :  (C) 2015 Fumiaki Kinoshita
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Fumiaki Kinoshita <fumiexcel@gmail.com>
--- Stability   :  experimental
+-- Stability   :  provisional
 -- Portability :  non-portable
--- Useful traversals inspired by XPath
+--
 ----------------------------------------------------------------------------
 module Text.XML.Lens (
     -- * Lenses, traversals for 'Element'
@@ -62,6 +62,7 @@ import Control.Lens
 import Data.Text (Text)
 import Data.Map (Map)
 import Control.Applicative
+import Data.CaseInsensitive as CI
 
 infixr 9 ./
 
@@ -153,14 +154,15 @@ entire :: Traversal' Element Element
 entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
     com (Element n a _) = Element n a
 
--- | Traverse elements which has the specified *local* name.
-named :: Text -> Traversal' Element Element
+-- | Traverse elements which has the specified *local* name (case-insensitive).
+named :: CI.CI Text -> Traversal' Element Element
 named n f s
-    | nameLocalName (elementName s) == n = f s
+    | CI.mk (nameLocalName (elementName s)) == n = f s
     | otherwise = pure s
 
+-- | Old name for 'named'
 ell :: Text -> Traversal' Element Element
-ell = named
+ell = named . CI.mk
 
 -- | Traverse elements which has the specified name.
 el :: Name -> Traversal' Element Element
@@ -182,10 +184,11 @@ text = nodes . traverse . _Content
 comment :: Traversal' Element Text
 comment = nodes . traverse . _Comment
 
+-- | 'plate' traverses over its sub-elements.
 instance Plated Element where
     plate = nodes . traverse . _Element
 
--- | Combine two 'Traversal's just like XPath's slash.
+-- | Combine two 'Traversal's just like XPath's slash. Identical to ('...').
 --
 -- @
 -- l ./ m ≡ l . 'plate' . m
