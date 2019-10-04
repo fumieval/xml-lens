@@ -62,7 +62,7 @@ import Control.Lens
 import Data.Text (Text)
 import Data.Map (Map)
 import Control.Applicative
-import Data.CaseInsensitive as CI
+import qualified Data.CaseInsensitive as CI
 
 infixr 9 ./
 
