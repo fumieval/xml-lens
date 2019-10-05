@@ -15,6 +15,7 @@ module Text.XML.Lens (
     -- * Lenses, traversals for 'Element'
     Element(..)
     , (./)
+    , (...)
     -- ** Names
     , name
     , localName
@@ -54,8 +55,6 @@ module Text.XML.Lens (
     , Instruction(..)
     , _instructionTarget
     , _instructionData
-    -- * Reexport
-    , module Control.Lens
     ) where
 import Text.XML
 import Control.Lens
@@ -197,3 +196,5 @@ instance Plated Element where
 (./) :: (Applicative f, Plated c) => LensLike f s t c c -> Over p f c c a b -> Over p f s t a b
 (./) = (...)
 {-# INLINE (./) #-}
+
+{-# DEPRECATED (./) "Use (...) instead" #-}
