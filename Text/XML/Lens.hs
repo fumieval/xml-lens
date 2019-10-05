@@ -153,6 +153,7 @@ attribute n = attrs . at n
 entire :: Traversal' Element Element
 entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
     com (Element n a _) = Element n a
+{-# DEPRECATED entire "Use cosmos or deep instead" #-}
 
 -- | Traverse elements which has the specified *local* name (case-insensitive).
 named :: CI.CI Text -> Traversal' Element Element
