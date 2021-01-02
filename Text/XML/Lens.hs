@@ -25,6 +25,8 @@ module Text.XML.Lens (
     -- ** Attributes
     , attributeIs
     , attributeSatisfies
+    , attributeSatisfies'
+    , withoutAttribute
     , attr
     , attribute
     , attrs
@@ -62,6 +64,7 @@ import Data.Text (Text)
 import Data.Map (Map)
 import Control.Applicative
 import qualified Data.CaseInsensitive as CI
+import Data.Maybe (isNothing)
 
 infixr 9 ./
 
@@ -171,7 +174,13 @@ el n f s
     | otherwise = pure s
 
 attributeSatisfies :: Name -> (Text -> Bool) -> Traversal' Element Element
-attributeSatisfies n p = filtered (maybe False p . preview (attrs . ix n))
+attributeSatisfies n p = attributeSatisfies' n (maybe False p)
+
+attributeSatisfies' :: Name -> (Maybe Text -> Bool) -> Traversal' Element Element
+attributeSatisfies' n p = filtered (p . preview (attrs . ix n))
+
+withoutAttribute :: Name -> Traversal' Element Element
+withoutAttribute n = attributeSatisfies' n isNothing
 
 attributeIs :: Name -> Text -> Traversal' Element Element
 attributeIs n v = attributeSatisfies n (==v)
