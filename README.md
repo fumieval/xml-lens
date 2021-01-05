@@ -43,4 +43,8 @@ Just "Functional Ikamusume"
 …
 ```
 
+Tips
+----
 
+* Use [cosmos](http://hackage.haskell.org/package/lens-4.19.2/docs/Control-Lens-Plated.html) to traverse over all children
+* You can do or-composition of traversals with [failing](http://hackage.haskell.org/package/lens-4.19.2/docs/Control-Lens-Traversal.html#v:failing)
