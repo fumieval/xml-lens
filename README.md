@@ -9,16 +9,16 @@ Example
 ```haskell
 > doc <- Text.XML.readFile def "examples/books.xml"
 
-> doc ^.. root . el "books" ./ el "book" . attributeIs "category" "Textbooks" ./ el "title" . text
+> doc ^.. root . named "books" ... named "book" . attributeIs "category" "Textbooks" ... named "title" . text
 ["Learn You a Haskell for Great Good!","Programming in Haskell","Real World Haskell"]
 
-> lengthOf ?? doc $ root . el "books" ./ el "book"
+> lengthOf ?? doc $ root . named "books" ... named "book"
 7
 
-> doc ^? root . el "books" ./ attributeIs "category" "Joke" ./ el "title" . text
+> doc ^? root . named "books" ... attributeIs "category" "Joke" ... named "title" . text
 Just "Functional Ikamusume"
 
-> doc & root . el "books" ./ el "book" ./ el "pages" . text <>~ " pages" & renderLBS def & BL.putStrLn
+> doc & root . named "books" ... named "book" ... named "pages" . text <>~ " pages" & renderLBS def & BL.putStrLn
 ```
 
 ```xml

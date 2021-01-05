@@ -14,7 +14,6 @@
 module Text.XML.Lens (
     -- * Lenses, traversals for 'Element'
     Element(..)
-    , (./)
     , (...)
     -- ** Names
     , name
@@ -34,7 +33,6 @@ module Text.XML.Lens (
     , text
     , comment
     -- ** Children
-    , entire
     , nodes
     -- * Prisms for 'Node'
     , Node(..)
@@ -62,11 +60,8 @@ import Text.XML
 import Control.Lens
 import Data.Text (Text)
 import Data.Map (Map)
-import Control.Applicative
 import qualified Data.CaseInsensitive as CI
 import Data.Maybe (isNothing)
-
-infixr 9 ./
 
 prologue :: Lens' Document Prologue
 prologue f doc = fmap (\p -> doc { documentPrologue = p} ) $ f $ documentPrologue doc
@@ -151,12 +146,6 @@ attr n = attrs . ix n
 attribute :: Name -> Lens' Element (Maybe Text)
 attribute n = attrs . at n
 
--- | Traverse itself with its all children.　Rewriting subnodes of each children will break a traversal law.
-entire :: Traversal' Element Element
-entire f e@(Element _ _ ns) = com <$> f e <*> traverse (_Element (entire f)) ns where
-    com (Element n a _) = Element n a
-{-# DEPRECATED entire "Use cosmos or deep instead" #-}
-
 -- | Traverse elements which has the specified *local* name (case-insensitive).
 named :: CI.CI Text -> Traversal' Element Element
 named n f s
@@ -172,6 +161,7 @@ el :: Name -> Traversal' Element Element
 el n f s
     | elementName s == n = f s
     | otherwise = pure s
+{-# DEPRECATED el "Use named instead" #-}
 
 attributeSatisfies :: Name -> (Text -> Bool) -> Traversal' Element Element
 attributeSatisfies n p = attributeSatisfies' n (maybe False p)
@@ -196,14 +186,3 @@ comment = nodes . traverse . _Comment
 -- | 'plate' traverses over its sub-elements.
 instance Plated Element where
     plate = nodes . traverse . _Element
-
--- | Combine two 'Traversal's just like XPath's slash. Identical to ('...').
---
--- @
--- l ./ m ≡ l . 'plate' . m
--- @
-(./) :: (Applicative f, Plated c) => LensLike f s t c c -> Over p f c c a b -> Over p f s t a b
-(./) = (...)
-{-# INLINE (./) #-}
-
-{-# DEPRECATED (./) "Use (...) instead" #-}
