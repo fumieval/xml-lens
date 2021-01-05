@@ -1,5 +1,5 @@
 name:                xml-lens
-version:             0.2
+version:             0.3
 synopsis:            Lenses, traversals, and prisms for xml-conduit
 description:         Lens-based DOM selector
 homepage:            https://github.com/fumieval/xml-lens
