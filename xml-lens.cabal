@@ -1,17 +1,20 @@
+cabal-version: 2.4
 name:                xml-lens
 version:             0.3
 synopsis:            Lenses, traversals, and prisms for xml-conduit
-description:         Lens-based DOM selector
+description:         This package provides DOM selectors based on lenses and prisms. See README.md for examples
 homepage:            https://github.com/fumieval/xml-lens
 bug-reports:         https://github.com/fumieval/xml-lens/issues
-license:             BSD3
+license:             BSD-3-Clause
 license-file:        LICENSE
 author:              Fumiaki Kinoshita
 maintainer:          Fumiaki Kinoshita <fumiexcel@gmail.com>
-copyright:           Copyright (C) 2019 Fumiaki Kinoshita
+copyright:           Copyright (C) 2021 Fumiaki Kinoshita
 category:            XML
 build-type:          Simple
-cabal-version:       >=1.10
+extra-source-files:
+  README.md
+  CHANGELOG.md
 
 source-repository head
   type: git
