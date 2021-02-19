@@ -25,7 +25,7 @@ library
   ghc-options: -Wall
   exposed-modules:     Text.XML.Lens
   build-depends:       base ==4.*
-    , lens >= 4.0 && < 5
+    , lens >= 4.0 && < 5.1
     , containers >= 0.4.0 && < 0.7
     , text >= 0.7 && <2
     , xml-conduit >= 1.1 && < 1.10
