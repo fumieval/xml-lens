@@ -175,7 +175,7 @@ named n f s
 
 -- | Old name for 'named'
 ell :: Text -> Traversal' Element Element
-ell = named . CI.mk
+ell n = named $ CI.mk n
 
 -- | Traverse elements which has the specified name.
 el :: Name -> Traversal' Element Element
