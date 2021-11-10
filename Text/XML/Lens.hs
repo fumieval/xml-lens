@@ -62,6 +62,8 @@ import Data.Text (Text)
 import Data.Map (Map)
 import qualified Data.CaseInsensitive as CI
 import Data.Maybe (isNothing)
+import Attendance
+import Attendance.Internal
 
 prologue :: Lens' Document Prologue
 prologue f doc = fmap (\p -> doc { documentPrologue = p} ) $ f $ documentPrologue doc
@@ -158,8 +160,8 @@ nodes :: Lens' Element [Node]
 nodes f e = fmap (\x -> e { elementNodes = x }) $ f $ elementNodes e
 {-# INLINE nodes #-}
 
-attr :: Name -> Traversal' Element Text
-attr n = attrs . ix n
+attr :: Name -> TraversalA' Element Text
+attr n = attrs . aix n
 {-# INLINE attr #-}
 
 attribute :: Name -> Lens' Element (Maybe Text)
@@ -167,14 +169,16 @@ attribute n = attrs . at n
 {-# INLINE attribute #-}
 
 -- | Traverse elements which has the specified *local* name (case-insensitive).
-named :: CI.CI Text -> Traversal' Element Element
-named n f s
-    | CI.mk (nameLocalName (elementName s)) == n = f s
-    | otherwise = pure s
+named :: CI.CI Text -> TraversalA' Element Element
+named n f s = doing ("named " <> show n) $ if CI.mk lname == n
+    then f s
+    else doing (show lname <> " does not match") $ pure s
+    where
+        lname = nameLocalName (elementName s)
 {-# INLINE named #-}
 
 -- | Old name for 'named'
-ell :: Text -> Traversal' Element Element
+ell :: Text -> TraversalA' Element Element
 ell n = named $ CI.mk n
 
 -- | Traverse elements which has the specified name.
@@ -184,19 +188,20 @@ el n f s
     | otherwise = pure s
 {-# DEPRECATED el "Use named instead" #-}
 
-attributeSatisfies :: Name -> (Text -> Bool) -> Traversal' Element Element
+attributeSatisfies :: Name -> (Text -> Bool) -> TraversalA' Element Element
 attributeSatisfies n p = attributeSatisfies' n (maybe False p)
 {-# INLINE attributeSatisfies #-}
 
-attributeSatisfies' :: Name -> (Maybe Text -> Bool) -> Traversal' Element Element
-attributeSatisfies' n p = filtered (p . preview (attrs . ix n))
+attributeSatisfies' :: Name -> (Maybe Text -> Bool) -> TraversalA' Element Element
+attributeSatisfies' n p = imprinting ("attributeSatisfies' " <> show (nameLocalName n))
+    $ filtered (p . preview (attrs . ix n))
 {-# INLINE attributeSatisfies' #-}
 
-withoutAttribute :: Name -> Traversal' Element Element
+withoutAttribute :: Name -> TraversalA' Element Element
 withoutAttribute n = attributeSatisfies' n isNothing
 {-# INLINE withoutAttribute #-}
 
-attributeIs :: Name -> Text -> Traversal' Element Element
+attributeIs :: Name -> Text -> TraversalA' Element Element
 attributeIs n v = attributeSatisfies n (==v)
 {-# INLINE attributeIs #-}
 
