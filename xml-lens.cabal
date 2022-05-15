@@ -1,6 +1,6 @@
 cabal-version: 2.4
 name:                xml-lens
-version:             0.3
+version:             0.3.1
 synopsis:            Lenses, traversals, and prisms for xml-conduit
 description:         This package provides DOM selectors based on lenses and prisms. See README.md for examples
 homepage:            https://github.com/fumieval/xml-lens
