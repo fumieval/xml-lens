@@ -28,5 +28,5 @@ library
     , lens >= 4.0 && < 5.4
     , containers >= 0.4.0 && < 0.7
     , text >= 0.7 && < 1.3 || >= 2 && < 2.1
-    , xml-conduit >= 1.1 && < 1.10
+    , xml-conduit >= 1.1 && < 1.11
     , case-insensitive
